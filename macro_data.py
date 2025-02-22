@@ -19,6 +19,7 @@ def get_raw_macro_market_data():
         "Core PCE Inflation (Ex Food & Energy)": "PCEPILFE",
         "Trimmed Mean PCE": "PCETRIM12M159SFRBDAL",
         "Median CPI": "MEDCPIM158SFRBCLE",
+        "Trimmed Mean PCE Inflation Rate":"PCETRIM12M159SFRBDAL",
         "PPI Final Demand": "PPIACO",
         "Real GDP": "A191RL1Q225SBEA",
         "GDP Growth Rate": "GDPC1",
