@@ -36,7 +36,6 @@ def get_raw_macro_market_data():
         "Initial Jobless Claims": "ICSA",
         "West Texas Intermediate":"DCOILWTICO",
         "Real Broad Dollar Index":"RTWEXBGS",
-        "S&P 500":"SP500",
         "NASDAQ Composite Index":"NASDAQCOM",
     }
 
@@ -65,5 +64,29 @@ def get_raw_macro_market_data():
 
 
 
+def interpolate_macro_market_data(file_path="data/raw/raw_macro_market_data.csv"):
+    """
+    Reads the raw macro market data from a CSV file and applies linear interpolation
+    to fill missing values in all columns.
+    
+    :param file_path: Path to the CSV file containing raw macro market data
+    :return: DataFrame with interpolated values
+    """
+    # Load the dataset
+    df = pd.read_csv(file_path, index_col=0, parse_dates=True)
+
+    # Perform linear interpolation on all columns
+    df_interpolated = df.interpolate(method="linear")
+
+    # Save the interpolated data
+    df_interpolated.to_csv("data/processed/interpolated_macro_market_data.csv")
+
+    return df_interpolated
+
+
+
+
+
 if __name__ =="__main__":
     get_raw_macro_market_data()
+    interpolate_macro_market_data()
