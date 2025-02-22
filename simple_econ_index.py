@@ -41,7 +41,7 @@ ax1.bar(final_df["date"], final_df["rate_change"], color=["red" if x > 0 else "g
 ax2 = ax1.twinx()
 
 # Plot Mandate Index (Right Y-Axis)
-sns.lineplot(data=final_df, x="date", y="mandate_index", label="Mandate Index", color="blue", ax=ax2)
+sns.lineplot(data=final_df, x="date", y="mandate_index", label="Fed Mandate- Economic Indicators Composite", color="blue", ax=ax2)
 
 # Formatting the plot
 ax1.axhline(0, linestyle="--", color="black", alpha=0.7)
