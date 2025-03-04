@@ -21,6 +21,7 @@ def get_raw_macro_market_data():
         "Median CPI": "MEDCPIM158SFRBCLE",
         "Trimmed Mean PCE Inflation Rate":"PCETRIM12M159SFRBDAL",
         "PPI Final Demand": "PPIACO",
+        "5-Year Breakeven Inflation Rate":"T5YIE",
         "Real GDP": "A191RL1Q225SBEA",
         "GDP Growth Rate": "GDPC1",
         "10-Year Treasury Yield": "DGS10",
