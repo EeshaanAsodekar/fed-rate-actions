@@ -19,6 +19,7 @@ macro_columns_subset = {
     "Core PCE Inflation (Ex Food & Energy)": "PCEPILFE",
     "Trimmed Mean PCE Inflation Rate": "PCETRIM12M159SFRBDAL",
     "Unemployment Rate": "UNRATE",
+    "5-Year Breakeven Inflation Rate":"T5YIE",
 }
 
 # Keep only relevant columns
@@ -29,7 +30,7 @@ macro_clean = macro_df.dropna()
 
 # **Step 3: Compute YoY Inflation for Each Measure (Except Trimmed Mean PCE)**
 for col in macro_columns_subset.keys():
-    if col == "Trimmed Mean PCE Inflation Rate" or col == "Unemployment Rate":
+    if col == "Trimmed Mean PCE Inflation Rate" or col == "Unemployment Rate" or col== "5-Year Breakeven Inflation Rate":
         macro_clean[f"{col} YoY"] = macro_clean[col]  # Already annualized
     else:
         macro_clean[f"{col} YoY"] = macro_clean[col].pct_change(12) * 100  # Compute YoY change
