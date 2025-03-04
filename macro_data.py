@@ -1,9 +1,40 @@
+"""
+This script fetches raw macroeconomic data from the Federal Reserve Economic Data (FRED) API,
+saves it to a CSV file, and then interpolates any missing values in that data. It includes:
+
+1. get_raw_macro_market_data(): 
+   - Connects to the FRED API using an API key.
+   - Downloads multiple macroeconomic time series.
+   - Combines them into a single DataFrame.
+   - Calculates the 2-10 Treasury spread.
+   - Saves the final DataFrame to a CSV file.
+
+2. interpolate_macro_market_data():
+   - Reads the saved macro data from a CSV file.
+   - Performs linear interpolation on missing values.
+   - Saves and returns the interpolated DataFrame.
+"""
 from fredapi import Fred
 import pandas as pd
 import datetime
 import yfinance as yf
 
 def get_raw_macro_market_data():
+    """
+    Downloads macroeconomic data from the FRED API, merges it into a single DataFrame,
+    computes the 2-10 Treasury spread, and saves the data to a CSV file.
+
+    This function:
+      - Initializes a Fred object using an API key.
+      - Loops through a dictionary of macro variables and their FRED series IDs.
+      - Fetches each series from FRED within a specified date range.
+      - Combines the data into a single DataFrame.
+      - Calculates the 2-10 spread (difference between 10-Year and 2-Year Treasury yields).
+      - Writes the resulting DataFrame to "data/raw/raw_macro_market_data.csv".
+
+    Returns:
+        None
+    """
     # Replace with your FRED API Key
     FRED_API_KEY = "efe3da4f00a3fac72acd1e0dbe68901d"
 
@@ -70,10 +101,16 @@ def get_raw_macro_market_data():
 def interpolate_macro_market_data(file_path="data/raw/raw_macro_market_data.csv"):
     """
     Reads the raw macro market data from a CSV file and applies linear interpolation
-    to fill missing values in all columns.
+    to fill missing values in all columns, then saves and returns the interpolated data.
+
+    Args:
+        file_path (str): 
+            The path to the CSV file containing the raw macro market data. 
+            Defaults to "data/raw/raw_macro_market_data.csv".
     
-    :param file_path: Path to the CSV file containing raw macro market data
-    :return: DataFrame with interpolated values
+    Returns:
+        pandas.DataFrame:
+            A DataFrame containing the interpolated macroeconomic data.
     """
     # Load the dataset
     df = pd.read_csv(file_path, index_col=0, parse_dates=True)
