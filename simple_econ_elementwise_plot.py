@@ -5,6 +5,8 @@ Script to get insightful plot of:
         3. fomc target rate
         4. fomc meeting rate hikes/cuts
 
+TODO: make sure that the zero of both of them is aligned
+TODO: add to the title/legend that the target inflation of 2% and unemployment of 4% is assumed
 """
 
 import pandas as pd
