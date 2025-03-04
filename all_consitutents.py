@@ -57,7 +57,7 @@ ax1.bar(final_df["date"], final_df["rate_change"],
 ax2 = ax1.twinx()
 
 # **Plot All YoY Inflation Measures (Right Y-Axis)**
-colors = ["red", "blue", "purple", "orange", "green", "brown"]  # Color map for inflation lines
+colors = ["red", "blue", "purple", "orange", "green", "brown", "grey"]  # Color map for inflation lines
 for idx, (label, col) in enumerate(macro_columns_subset.items()):
     sns.lineplot(data=final_df, x="date", y=f"{label} YoY", label=f"{label} YoY", 
                  color=colors[idx], marker=".", markersize=3, ax=ax2)
