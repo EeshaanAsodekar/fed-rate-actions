@@ -1,14 +1,3 @@
-"""
-Script to get insightful plot of:
-        1. unemployment gap (Core PCE inflation Ex. Food and Energy based)
-        2. inflation gap (Unemployment Rate based)
-        3. fomc target rate
-        4. fomc meeting rate hikes/cuts
-
-TODO: make sure that the zero of both of them is aligned
-TODO: add to the title/legend that the target inflation of 2% and unemployment of 4% is assumed
-"""
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -40,34 +29,74 @@ final_df = pd.merge(fomc_df, macro_clean, on="date", how="outer")
 # **Step 6: Sort by Date to Maintain Chronology**
 final_df.sort_values("date", inplace=True)
 
-
 # **Plot Fed Funds Rate, Rate Hikes, Inflation Gap, and Unemployment Gap**
 fig, ax1 = plt.subplots(figsize=(12, 6))
 
 # **Plot Fed Funds Target Rate (Line + Markers, Left Y-Axis)**
-sns.lineplot(data=final_df, x="date", y="tgt_rate", label="Fed Funds Target Rate", color="midnightblue", marker="o", markersize=5, ax=ax1)
+sns.lineplot(
+    data=final_df, 
+    x="date", y="tgt_rate", 
+    label="Fed Funds Target Rate", 
+    color="midnightblue", 
+    marker="o", markersize=5, 
+    ax=ax1
+)
 
 # **Plot Rate Changes as Bar Chart (Left Y-Axis, centered at 0)**
-ax1.bar(final_df["date"], final_df["rate_change"], 
-        color=["red" if x > 0 else "green" for x in final_df["rate_change"]], 
-        alpha=0.6, width=30, label="Rate Hikes (+) / Cuts (-)")
+ax1.bar(
+    final_df["date"], 
+    final_df["rate_change"], 
+    color=["red" if x > 0 else "green" for x in final_df["rate_change"]], 
+    alpha=0.6, width=30, 
+    label="Rate Hikes (+) / Cuts (-)"
+)
 
 # **Create a secondary Y-axis for Inflation & Unemployment Gaps**
 ax2 = ax1.twinx()
 
 # **Plot Inflation Gap (Right Y-Axis)**
-sns.lineplot(data=final_df, x="date", y="inflation_gap", label="Inflation Gap", color="red", marker="o", markersize=5, ax=ax2)
+sns.lineplot(
+    data=final_df, 
+    x="date", y="inflation_gap", 
+    label="Inflation Gap", 
+    color="red", 
+    marker="o", markersize=5, 
+    ax=ax2
+)
 
 # **Plot Unemployment Gap (Right Y-Axis)**
-sns.lineplot(data=final_df, x="date", y="unemployment_gap", label="Unemployment Gap", color="blue", marker="o", markersize=5, ax=ax2)
+sns.lineplot(
+    data=final_df, 
+    x="date", y="unemployment_gap", 
+    label="Unemployment Gap", 
+    color="blue", 
+    marker="o", markersize=5, 
+    ax=ax2
+)
+
+# **Force both y-axes to align at zero** 
+# (i.e., make them symmetric around zero so the dashed line matches exactly on both sides)
+ax1_min, ax1_max = ax1.get_ylim()
+ax2_min, ax2_max = ax2.get_ylim()
+
+# Find the largest absolute value across both axes
+max_range = max(abs(ax1_max), abs(ax2_max))
+min_range = max(abs(ax1_min), abs(ax2_min))
+# Apply the symmetric limits
+ax1.set_ylim(-min_range, max_range)
+ax2.set_ylim(-min_range, max_range)
 
 # **Formatting the plot**
 ax1.axhline(0, linestyle="--", color="black", alpha=0.7)
 ax1.set_xlabel("Date")
 ax1.set_ylabel("Fed Funds Rate & Rate Changes (bps)")
-ax2.set_ylabel("Inflation & Unemployment Gaps")
+ax2.set_ylabel("Inflation & Unemployment Gaps (%)")
 
-ax1.set_title("Fed Funds Rate vs. Rate Hikes vs. Inflation & Unemployment Gaps")
+# **Add assumptions in the title (2% inflation, 4% unemployment)**
+ax1.set_title(
+    "Fed Funds Rate vs. Rate Hikes vs. Inflation & Unemployment Gaps\n"
+    "(Assuming 2% inflation target and 4% unemployment target)"
+)
 
 # **Adjust legends**
 ax1.legend(loc="upper left")
