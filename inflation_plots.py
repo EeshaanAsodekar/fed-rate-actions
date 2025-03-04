@@ -1,3 +1,15 @@
+"""
+Script to get insightful plot of:
+1. Inflation measures
+    a. PCE Inflation
+    b. Core PCE Inflation (Ex Food & Energy)
+    c. Trimmed Mean PCE Inflation Rate
+    d. 5-Year Breakeven Inflation Rate
+2. Fed Target rate
+3. Fed Rate moves hike/cut
+
+"""
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,11 +25,12 @@ fomc_df["date"] = pd.to_datetime(fomc_df["date"])
 
 # **Step 1: Extract Required Inflation Columns**
 inflation_columns = {
-    "CPI (All Urban Consumers)": "CPIAUCSL",
-    "Core CPI (Ex Food & Energy)": "CPILFESL",
+    # "CPI (All Urban Consumers)": "CPIAUCSL",
+    # "Core CPI (Ex Food & Energy)": "CPILFESL",
     "PCE Inflation": "PCEPI",
     "Core PCE Inflation (Ex Food & Energy)": "PCEPILFE",
     "Trimmed Mean PCE Inflation Rate": "PCETRIM12M159SFRBDAL",
+    "5-Year Breakeven Inflation Rate":"T5YIE",
     # "PPI Final Demand": "PPIACO",
 }
 
@@ -29,7 +42,7 @@ macro_clean = macro_df.dropna()
 
 # **Step 3: Compute YoY Inflation for Each Measure (Except Trimmed Mean PCE)**
 for col in inflation_columns.keys():
-    if col == "Trimmed Mean PCE Inflation Rate":
+    if col == "Trimmed Mean PCE Inflation Rate" or col == "5-Year Breakeven Inflation Rate":
         macro_clean[f"{col} YoY"] = macro_clean[col]  # Already annualized
     else:
         macro_clean[f"{col} YoY"] = macro_clean[col].pct_change(12) * 100  # Compute YoY change
