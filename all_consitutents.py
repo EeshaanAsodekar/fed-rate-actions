@@ -62,18 +62,17 @@ for idx, (label, col) in enumerate(macro_columns_subset.items()):
     sns.lineplot(data=final_df, x="date", y=f"{label} YoY", label=f"{label} YoY", 
                  color=colors[idx], marker=".", markersize=3, ax=ax2)
 
-# **Align the Zero Lines of Both Axes**
-ax1_min, ax1_max = ax1.get_ylim()  # Get current y-limits for left axis
-ax2_min, ax2_max = ax2.get_ylim()  # Get current y-limits for right axis
+# After all plotting is done...
+ax1_min, ax1_max = ax1.get_ylim()
+ax2_min, ax2_max = ax2.get_ylim()
 
-# Find the range for each axis
-ax1_range = max(abs(ax1_min), abs(ax1_max))  # Max absolute range for left axis
-ax2_range = max(abs(ax2_min), abs(ax2_max))  # Max absolute range for right axis
+# Find the most extreme value across both axes
+max_range = max(abs(ax1_max), abs(ax2_max))
+min_range = max(abs(ax1_min), abs(ax2_min))
+# Force both axes to have the same symmetric range around zero
+ax1.set_ylim(-min_range, max_range)
+ax2.set_ylim(-min_range, max_range)
 
-lower_limit = max(abs(ax1_min), abs(ax2_min))
-# Set symmetric limits so both axes have the same zero alignment
-ax1.set_ylim(-lower_limit, ax1_range)
-ax2.set_ylim(-lower_limit, ax2_range)
 
 # **Formatting the plot**
 ax1.axhline(0, linestyle="--", color="black", alpha=0.7)
