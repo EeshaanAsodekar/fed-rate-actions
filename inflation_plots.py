@@ -78,9 +78,13 @@ for idx, (label, col) in enumerate(inflation_columns.items()):
 ax1_min, ax1_max = ax1.get_ylim()  # Get current y-limits for left axis
 ax2_min, ax2_max = ax2.get_ylim()  # Get current y-limits for right axis
 
+# Find the most extreme value across both axes
+max_range = max(abs(ax1_max), abs(ax2_max))
+min_range = max(abs(ax1_min), abs(ax2_min))
+
 # Find the range for each axis
-ax1_range = max(abs(ax1_min), abs(ax1_max))  # Max absolute range for left axis
-ax2_range = max(abs(ax2_min), abs(ax2_max))  # Max absolute range for right axis
+ax1_range = max(abs(min_range), abs(max_range))  # Max absolute range for left axis
+ax2_range = max(abs(min_range), abs(max_range))  # Max absolute range for right axis
 
 lower_limit = max(abs(ax1_min), abs(ax2_min))
 # Set symmetric limits so both axes have the same zero alignment
