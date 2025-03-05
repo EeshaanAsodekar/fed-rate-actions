@@ -1,3 +1,8 @@
+"""
+studying interaction only on the rate_change variable (Y) and the
+inflation macros and unemployement YOY Rates/ Rates (X)
+"""
+
 import pandas as pd
 import numpy as np
 from datetime import timedelta
