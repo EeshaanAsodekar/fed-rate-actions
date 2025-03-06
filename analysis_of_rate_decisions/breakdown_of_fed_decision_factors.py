@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import statsmodels.api as sm
 from datetime import timedelta
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
@@ -102,26 +103,43 @@ def merge_fomc_with_macro(fomc_df, macro_df, fomc_date_col='date', macro_date_co
 
 def run_linear_regression(merged_df, target_col='rate_change', drop_cols=None):
     """
-    Linear regression: Y = rate_change, X = selected numeric columns.
-    Returns the fitted model, a DataFrame of coefficients, and the intercept.
+    Performs OLS regression to compute coefficient significance.
+
+    - merged_df: DataFrame containing the data
+    - target_col: The dependent variable (Y)
+    - drop_cols: Columns to exclude from the independent variables (X)
+
+    Returns:
+    - results: The fitted OLS model
+    - summary_df: DataFrame containing coefficients, p-values, and confidence intervals
+    - intercept: The model intercept
     """
     if drop_cols is None:
-        drop_cols = ['date','lookup_date','tgt_rate','rate_change']
+        drop_cols = ['date', 'lookup_date', 'tgt_rate', 'rate_change']
 
+    # Selecting numeric columns only
     features_df = merged_df.select_dtypes(include=[np.number]).drop(columns=drop_cols, errors='ignore')
-    X = features_df.values
+
+    # Define X (independent variables) and Y (dependent variable)
+    X = features_df.copy()
+    X = sm.add_constant(X)  # Adds an intercept term
     y = merged_df[target_col].values
 
-    linreg = LinearRegression()
-    linreg.fit(X, y)
+    # Fit OLS Regression
+    model = sm.OLS(y, X).fit()
 
-    coeffs = pd.DataFrame({
-        'feature': features_df.columns,
-        'coefficient': linreg.coef_
-    }).sort_values(by='coefficient', ascending=False)
+    # Extract coefficients, p-values, and confidence intervals
+    summary_df = pd.DataFrame({
+        'feature': X.columns,
+        'coefficient': model.params.values,
+        'p_value': model.pvalues.values,
+        'conf_lower': model.conf_int()[0].values,
+        'conf_upper': model.conf_int()[1].values
+    }).sort_values(by='p_value')
 
-    intercept = linreg.intercept_
-    return linreg, coeffs, intercept
+    intercept = model.params['const']
+    
+    return model, summary_df, intercept
 
 def run_random_forest(merged_df, target_col='rate_change', drop_cols=None,
                       n_estimators=100, max_depth=5):
@@ -192,13 +210,14 @@ if __name__ == "__main__":
     print(merged_df.head())
 
     # 5. Run Linear Regression
-    linreg_model, linreg_coeffs, linreg_intercept = run_linear_regression(
+    linreg_model, linreg_summary, linreg_intercept = run_linear_regression(
         merged_df,
         target_col='rate_change',
         drop_cols=['date','lookup_date','tgt_rate','rate_change']
     )
-    print("Linear Regression Coefficients:")
-    print(linreg_coeffs)
+
+    print("Linear Regression Coefficients, P-values, and Confidence Intervals:")
+    print(linreg_summary)
     print(f"Intercept: {linreg_intercept}\n")
 
     # 6. Run Random Forest
