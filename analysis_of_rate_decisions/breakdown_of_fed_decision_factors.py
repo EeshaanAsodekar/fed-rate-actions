@@ -156,7 +156,6 @@ if __name__ == "__main__":
 
     # 2. Focus only on inflation macros, 2–10 spread, unemployment rate,
     #    GDP growth rate, and 10-year yield.
-    #    We'll assume you have columns like:
     inflation_cols = [
         'CPI (All Urban Consumers)',
         'Core CPI (Ex Food & Energy)',
@@ -169,7 +168,9 @@ if __name__ == "__main__":
         '2-10 Spread',
         'Unemployment Rate',
         'GDP Growth Rate',
+        '2-Year Treasury Yield',
         '10-Year Treasury Yield',
+        '5-Year Breakeven Inflation Rate',
     ] + inflation_cols
 
     macro_df = macro_df[keep_cols].copy()
@@ -185,6 +186,10 @@ if __name__ == "__main__":
         macro_date_col='date',
         lag_months=0
     )
+
+    merged_df.drop(columns=["Unnamed: 0"], inplace=True)
+    print(merged_df.columns)
+    print(merged_df.head())
 
     # 5. Run Linear Regression
     linreg_model, linreg_coeffs, linreg_intercept = run_linear_regression(
