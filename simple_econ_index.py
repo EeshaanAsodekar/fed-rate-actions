@@ -66,7 +66,7 @@ ax1.set_xlabel("Date")
 ax1.set_ylabel("Fed Funds Rate & Rate Changes (bps)")
 ax2.set_ylabel("Mandate Index (Z-score)")
 
-ax1.set_title("Fed Funds Rate vs. Rate Hikes vs. Mandate Index")
+ax1.set_title("Fed Funds Rate and Rate Moves vs. \n Mandate Index {0.5*dist_to_tgt_inflation - 0.5*dist_to_target_unemp}")
 
 # Adjust legends
 ax1.legend(loc="upper left")
